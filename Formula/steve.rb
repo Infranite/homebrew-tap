@@ -9,6 +9,7 @@ class Steve < Formula
     depends_on macos: :sonoma
     url "https://api.github.com/repos/Infranite/steve/releases/assets/723717460",
         headers: ["Accept: application/octet-stream"]
+    mirror "https://github.com/Infranite/steve/releases/download/v0.2.78/steve-0.2.78-aarch64-apple-darwin-installer.tar.gz"
     sha256 "694abc8e27c11bb219132f43cea984db26296b628ad8d377a5de5983dea0aff1"
   end
 
@@ -16,6 +17,7 @@ class Steve < Formula
     depends_on arch: :x86_64
     url "https://api.github.com/repos/Infranite/steve/releases/assets/723717458",
         headers: ["Accept: application/octet-stream"]
+    mirror "https://github.com/Infranite/steve/releases/download/v0.2.78/steve-0.2.78-x86_64-unknown-linux-gnu-installer.tar.gz"
     sha256 "2b503b788ac4ba3509231890a05565220b5b7850f1b0d24cfa5961488ab17b37"
   end
 

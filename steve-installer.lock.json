@@ -3,7 +3,7 @@
     "aarch64-apple-darwin": "https://api.github.com/repos/Infranite/steve/releases/assets/723717460",
     "x86_64-unknown-linux-gnu": "https://api.github.com/repos/Infranite/steve/releases/assets/723717458"
   },
-  "formula_sha256": "691cb4d9b32f8dc68ef6751321ecb0dcb471d3fead192450f4f027db05efb3bc",
+  "formula_sha256": "b1a54fd66ab639b81684e601c2e53d65b4525a4eb52a3a173f9a50aa4eb855a2",
   "manifest": {
     "api_protocol": 1,
     "assets": [
