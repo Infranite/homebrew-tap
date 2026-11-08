@@ -117,11 +117,23 @@ jobs:
       - name: Verify native CLI without external runtimes
         run: |
           set -euo pipefail
-          # The native Formula declares no runtime dependencies. In particular,
-          # Python and OpenSSL must not be pulled in to launch the management CLI.
+          # Homebrew's JSON dependency fields exclude :implicit dependencies.
+          # Linuxbrew can inject its own compiler/libc bottles even when this
+          # Formula declares no dependencies. Check both contracts explicitly.
+          formula_info="$(brew info --json=v2 steve)"
+          printf '%s\n' "$formula_info"
+          jq -e '
+            (.formulae | length) == 1 and
+            (.formulae[0] |
+              .name == "steve" and
+              ([.dependencies, .build_dependencies, .test_dependencies,
+                .recommended_dependencies, .optional_dependencies, .uses_from_macos]
+               | all(type == "array" and length == 0)))
+          ' <<< "$formula_info" > /dev/null
           dependencies="$(brew deps steve)"
-          if [[ -n "$dependencies" ]]; then
-            printf '::error::Unexpected Steve runtime dependencies:\n%s\n' "$dependencies"
+          printf 'Homebrew dependency closure (includes platform implicit dependencies):\n%s\n' "$dependencies"
+          if printf '%s\n' "$dependencies" | grep -Eiq '(^|/)(python([@-].*)?|openssl(@.*)?)$'; then
+            printf '::error::Steve dependency closure includes Python or OpenSSL\n'
             exit 1
           fi
           native="$(brew --prefix steve)/libexec/bin/steve"
@@ -177,7 +189,7 @@ jobs:
           for directory in "$HOME/.steve" "$HOME/.steve-node"; do
             [[ ! -e "$directory" && ! -L "$directory" ]]
           done
-          printf 'Native CLI protocol 2 passed with no Formula dependencies, no Python/OpenSSL linkage, an empty PATH, and no HOME creation on %s (%s).\n' \
+          printf 'Native CLI protocol 2 passed with no declared Steve dependencies, no Python/OpenSSL dependencies or linkage, an empty PATH, and no HOME creation on %s (%s).\n' \
             "$RUNNER_OS" "$RUNNER_ARCH" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Assert no Steve data directories were created
