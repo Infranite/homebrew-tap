@@ -1,0 +1,126 @@
+name: Homebrew install acceptance
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: Install and test (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            kernel: Darwin
+            machine: arm64
+            runner_arch: ARM64
+            brew_binary: /opt/homebrew/bin/brew
+          - runner: ubuntu-22.04
+            kernel: Linux
+            machine: x86_64
+            runner_arch: X64
+            brew_binary: /home/linuxbrew/.linuxbrew/bin/brew
+    defaults:
+      run:
+        shell: bash
+    env:
+      HOMEBREW_NO_ANALYTICS: "1"
+      HOMEBREW_NO_INSTALL_UPGRADE: "1"
+      HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+      HOMEBREW_NO_ENV_HINTS: "1"
+    steps:
+      - name: Verify runner and absent Steve homes
+        run: |
+          set -euo pipefail
+          [[ "$(uname -s)" == "${{ matrix.kernel }}" ]]
+          [[ "$(uname -m)" == "${{ matrix.machine }}" ]]
+          [[ "$RUNNER_ARCH" == "${{ matrix.runner_arch }}" ]]
+          # Hosted images already include Homebrew; fail instead of invoking
+          # setup-homebrew's fallback installer if the image contract changes.
+          test -x "${{ matrix.brew_binary }}"
+          for directory in "$HOME/.steve" "$HOME/.steve-node"; do
+            if [[ -e "$directory" || -L "$directory" ]]; then
+              printf '::error::Steve home already exists: %s\n' "$directory"
+              exit 1
+            fi
+          done
+
+      # This official action checks out this tap at GITHUB_SHA itself.
+      - name: Set up stable Homebrew and check out the tap
+        uses: Homebrew/actions/setup-homebrew@63a2d4d8d4193eab3e62b1b782ff3ab8408f5b29 # main reviewed 2026-11-08
+        with:
+          stable: true
+          core: false
+          cask: false
+
+      - name: Verify clean Steve installation state
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$GITHUB_SHA" ]]
+          test -s Formula/steve.rb
+          test -s steve-installer.lock.json
+          brew --version
+          brew config
+          installed_formulae="$(brew list --formula)"
+          while IFS= read -r formula; do
+            if [[ "$formula" == "steve" ]]; then
+              printf '::error::Steve is already installed on this runner\n'
+              exit 1
+            fi
+          done <<< "$installed_formulae"
+          for directory in "$HOME/.steve" "$HOME/.steve-node"; do
+            [[ ! -e "$directory" && ! -L "$directory" ]]
+          done
+          # setup-homebrew grants whole-tap trust. Remove that runner-local grant
+          # so the real fully qualified install exercises Formula-level trust.
+          brew untrust --tap infranite/tap
+          # The official action has refreshed Homebrew and its metadata once.
+          # Subsequent installation/test commands must not initiate auto-updates.
+          printf 'HOMEBREW_NO_AUTO_UPDATE=1\n' >> "$GITHUB_ENV"
+
+      - name: Install the published Steve package
+        run: |
+          set -euo pipefail
+          brew install infranite/tap/steve
+          for directory in "$HOME/.steve" "$HOME/.steve-node"; do
+            [[ ! -e "$directory" && ! -L "$directory" ]]
+          done
+
+      - name: Run the Formula test and CLI smoke checks
+        run: |
+          set -euo pipefail
+          brew test steve
+          installed="$(brew list --versions steve)"
+          read -r formula version extra <<< "$installed"
+          [[ "$formula" == "steve" && -n "$version" && -z "${extra:-}" ]]
+          actual="$(steve --version)"
+          printf '%s\n' "$actual"
+          [[ "$actual" == "steve CLI/package $version" ]]
+          help="$(steve --help)"
+          printf '%s\n' "$help"
+          for command in setup hub node upgrade; do
+            [[ "$help" == *"$command"* ]]
+          done
+          printf 'Formula test and CLI checks passed for Steve %s on %s (%s).\n' \
+            "$version" "$RUNNER_OS" "$RUNNER_ARCH" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Assert no Steve data directories were created
+        if: always()
+        run: |
+          set -euo pipefail
+          for directory in "$HOME/.steve" "$HOME/.steve-node"; do
+            if [[ -e "$directory" || -L "$directory" ]]; then
+              printf '::error::Installation or CLI checks created a Steve home: %s\n' "$directory"
+              exit 1
+            fi
+          done
+          printf 'No Steve Hub or Node home exists after the checks; setup and services were not invoked.\n' \
+            >> "$GITHUB_STEP_SUMMARY"

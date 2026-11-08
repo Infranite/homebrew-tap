@@ -1,0 +1,36 @@
+{
+  "download_urls": {
+    "aarch64-apple-darwin": "https://api.github.com/repos/Infranite/steve/releases/assets/723501542",
+    "x86_64-unknown-linux-gnu": "https://api.github.com/repos/Infranite/steve/releases/assets/723501536"
+  },
+  "formula_sha256": "03f77efe5dc6de65409b98cc1bb61927d676490797adeafcb83931767e2ce5ff",
+  "manifest": {
+    "api_protocol": 1,
+    "assets": [
+      {
+        "name": "steve-0.2.77-aarch64-apple-darwin-installer.tar.gz",
+        "sha256": "0a1e6687d6eb8b079635b751c51afb7cd904d546ef0a1f4d468605f67642b36e",
+        "size": 48190550,
+        "target": "aarch64-apple-darwin"
+      },
+      {
+        "name": "steve-0.2.77-x86_64-unknown-linux-gnu-installer.tar.gz",
+        "sha256": "9f6f312c959e69cade51de42ded5778438deb2243c6e06ac79e9f9d6c4a8643a",
+        "size": 53090126,
+        "target": "x86_64-unknown-linux-gnu"
+      }
+    ],
+    "cli_protocol": 1,
+    "commit": "1e25cee5d7e1810f4fe03a8a020bd8558a0665b6",
+    "format_version": 1,
+    "hub_version": "0.2.77",
+    "schema": {
+      "max_read": 54,
+      "min_read": 54,
+      "target": 54
+    },
+    "version": "0.2.77",
+    "web_version": "0.2.77"
+  },
+  "repository": "Infranite/steve"
+}
