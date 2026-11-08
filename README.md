@@ -1,6 +1,6 @@
 # Steve for Homebrew
 
-Steve binaries support Apple Silicon macOS 14+ or Linux x86_64 with glibc 2.35+. Homebrew's own supported-host policy also applies. Install with:
+Install Steve on Apple Silicon macOS 14+ or Linux x86_64 with glibc 2.35+:
 
 ```sh
 brew install infranite/tap/steve
@@ -8,14 +8,14 @@ steve setup
 steve hub start
 ```
 
-Homebrew downloads the published binaries and their matching Web interface. No source checkout, Rust compiler or frontend build is needed. Python is installed as a Homebrew dependency. Setup handles the local configuration and credential-store initialization; macOS may ask for system authorization.
+Homebrew downloads the native CLI, service binaries and their matching Web interface. Installation and normal operation need no Python interpreter, source checkout, Rust compiler or frontend build. Setup handles the local configuration and credential-store initialization; macOS may ask for system authorization.
 
 To connect another machine, run `steve setup node --hub https://your-hub.example`, follow its pairing instructions, then run `steve node start`. Use `steve hub doctor` or `steve node doctor` to diagnose an installation, including when the Hub is unavailable. [Steve's deployment documentation](https://github.com/Infranite/steve/blob/main/docs/deployment.md) describes the supported environments and recovery commands.
 
 `brew upgrade steve` updates the launcher and available installation bundle. Steve's upgrade coordinator manages the running Hub, including task drain, backups and recovery. Homebrew does not start a service, sign an executable or modify a Steve data directory during installation. To remove a configured Hub, run `steve hub stop`, `steve hub uninstall`, then `brew uninstall steve`; use `node` on a separate Node and verify its sessions in Devices before stopping it. Unregistering the stopped service backs up its registration and preserves the private runtime, data, keys and pairing. Revoke a retired Node in Hub Devices separately when you intend to remove its access.
 
-The **Sync published Steve installer** workflow checks the public release every six hours and can also be run manually. It accepts only complete stable releases with CLI protocol 1, verifies both platforms, and commits the Formula and release lock together. Repeating the same release is a no-op; downgrades and changed assets under the same version are refused. It uses this tap's own `GITHUB_TOKEN`, without credentials for the Steve source repository. No installer-capable release means no Formula update.
+The **Sync published Steve installer** workflow checks the public release every six hours and can also be run manually. It accepts only complete stable releases with native CLI protocol 2, verifies both platforms, and commits the Formula and release lock together. An existing protocol 1 lock can advance to a newer native release; new protocol 1 releases are refused. Repeating the same release is a no-op; downgrades and changed assets under the same version are refused. It uses this tap's own `GITHUB_TOKEN`, without credentials for the Steve source repository. No installer-capable release means no Formula update.
 
 The maintained tap template and verification code live in [Steve's `packaging/homebrew/tap`](https://github.com/Infranite/steve/tree/main/packaging/homebrew/tap). The template README is named `README.md.in` there; this tap publishes it as `README.md`.
 
-The **Homebrew install acceptance** workflow performs a real install and Formula/CLI tests on fresh GitHub-hosted Apple Silicon macOS and Linux x86_64 runners. It asserts installation creates no Steve data directories and does not run setup, Keychain initialization or services. Maintainers can dispatch it after a version sync; scheduled sync commits made by `GITHUB_TOKEN` do not trigger a separate push workflow automatically.
+The **Homebrew install acceptance** workflow performs a real install and Formula/CLI tests on fresh GitHub-hosted Apple Silicon macOS and Linux x86_64 runners. It checks that Steve has no Homebrew dependencies, that its CLI is a native executable without Python/OpenSSL linkage, and that read-only commands work with an empty PATH and no existing home. It does not run setup, Keychain initialization or services. Maintainers can dispatch it after a version sync; scheduled sync commits made by `GITHUB_TOKEN` do not trigger a separate push workflow automatically.

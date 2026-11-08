@@ -20,11 +20,13 @@ jobs:
           - runner: macos-15
             kernel: Darwin
             machine: arm64
+            target: aarch64-apple-darwin
             runner_arch: ARM64
             brew_binary: /opt/homebrew/bin/brew
           - runner: ubuntu-22.04
             kernel: Linux
             machine: x86_64
+            target: x86_64-unknown-linux-gnu
             runner_arch: X64
             brew_binary: /home/linuxbrew/.linuxbrew/bin/brew
     defaults:
@@ -111,6 +113,72 @@ jobs:
           done
           printf 'Formula test and CLI checks passed for Steve %s on %s (%s).\n' \
             "$version" "$RUNNER_OS" "$RUNNER_ARCH" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify native CLI without external runtimes
+        run: |
+          set -euo pipefail
+          # The native Formula declares no runtime dependencies. In particular,
+          # Python and OpenSSL must not be pulled in to launch the management CLI.
+          dependencies="$(brew deps steve)"
+          if [[ -n "$dependencies" ]]; then
+            printf '::error::Unexpected Steve runtime dependencies:\n%s\n' "$dependencies"
+            exit 1
+          fi
+          native="$(brew --prefix steve)/libexec/bin/steve"
+          [[ "$native" == /* && -f "$native" && -x "$native" ]]
+          description="$(file -L "$native")"
+          printf '%s\n' "$description"
+          case "${{ matrix.kernel }}" in
+            Darwin)
+              [[ "$description" == *"Mach-O 64-bit executable arm64"* ]]
+              libraries="$(otool -L "$native")"
+              ;;
+            Linux)
+              [[ "$description" == *"ELF 64-bit"* && "$description" == *"x86-64"* ]]
+              if [[ "$description" == *"statically linked"* ]]; then
+                libraries="statically linked"
+              else
+                libraries="$(ldd "$native")"
+              fi
+              ;;
+          esac
+          printf '%s\n' "$libraries"
+          if printf '%s\n' "$libraries" | grep -Eiq 'lib(python|ssl|crypto)'; then
+            printf '::error::Native CLI unexpectedly links a Python or OpenSSL runtime\n'
+            exit 1
+          fi
+
+          # jq is CI inspection tooling; the three CLI invocations below have an
+          # empty environment and a PATH containing no executable at all.
+          expected_version="$(jq -er '.manifest.version' steve-installer.lock.json)"
+          expected_commit="$(jq -er '.manifest.commit' steve-installer.lock.json)"
+          jq -e '.manifest.cli_protocol == 2' steve-installer.lock.json > /dev/null
+          umask 077
+          scratch="$(mktemp -d "$RUNNER_TEMP/steve-native-smoke.XXXXXX")"
+          empty_path="$scratch/empty-path"
+          smoke_home="$scratch/absent-home"
+          mkdir "$empty_path"
+          [[ ! -e "$smoke_home" && ! -L "$smoke_home" ]]
+          actual="$(/usr/bin/env -i HOME="$smoke_home" PATH="$empty_path" "$native" --version)"
+          printf '%s\n' "$actual"
+          [[ "$actual" == "steve CLI/package $expected_version" ]]
+          help="$(/usr/bin/env -i HOME="$smoke_home" PATH="$empty_path" "$native" --help)"
+          printf '%s\n' "$help"
+          for command in setup hub node upgrade; do
+            [[ "$help" == *"$command"* ]]
+          done
+          info="$(/usr/bin/env -i HOME="$smoke_home" PATH="$empty_path" "$native" --build-info)"
+          printf '%s\n' "$info"
+          jq -e --arg version "$expected_version" --arg commit "$expected_commit" \
+            --arg target "${{ matrix.target }}" \
+            '.version == $version and .commit == $commit and .target == $target
+             and .cli_protocol == 2 and .native_install == true' <<< "$info" > /dev/null
+          [[ ! -e "$smoke_home" && ! -L "$smoke_home" ]]
+          for directory in "$HOME/.steve" "$HOME/.steve-node"; do
+            [[ ! -e "$directory" && ! -L "$directory" ]]
+          done
+          printf 'Native CLI protocol 2 passed with no Formula dependencies, no Python/OpenSSL linkage, an empty PATH, and no HOME creation on %s (%s).\n' \
+            "$RUNNER_OS" "$RUNNER_ARCH" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Assert no Steve data directories were created
         if: always()

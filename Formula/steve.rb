@@ -1,25 +1,23 @@
 class Steve < Formula
   desc "Local workspace for autonomous agents"
   homepage "https://github.com/Infranite/steve"
-  version "0.2.77"
+  version "0.2.78"
   license "MIT"
 
   on_macos do
     depends_on arch: :arm64
     depends_on macos: :sonoma
-    url "https://api.github.com/repos/Infranite/steve/releases/assets/723501542",
+    url "https://api.github.com/repos/Infranite/steve/releases/assets/723717460",
         headers: ["Accept: application/octet-stream"]
-    sha256 "0a1e6687d6eb8b079635b751c51afb7cd904d546ef0a1f4d468605f67642b36e"
+    sha256 "694abc8e27c11bb219132f43cea984db26296b628ad8d377a5de5983dea0aff1"
   end
 
   on_linux do
     depends_on arch: :x86_64
-    url "https://api.github.com/repos/Infranite/steve/releases/assets/723501536",
+    url "https://api.github.com/repos/Infranite/steve/releases/assets/723717458",
         headers: ["Accept: application/octet-stream"]
-    sha256 "9f6f312c959e69cade51de42ded5778438deb2243c6e06ac79e9f9d6c4a8643a"
+    sha256 "2b503b788ac4ba3509231890a05565220b5b7850f1b0d24cfa5961488ab17b37"
   end
-
-  depends_on "python@3.13"
 
   def install
     if OS.linux?
@@ -27,11 +25,7 @@ class Steve < Formula
       odie "Steve requires glibc 2.35 or newer" if glibc.nil? || Version.new(glibc) < Version.new("2.35")
     end
     libexec.install "bin", "ops", "web", "release.json", "LICENSE"
-    (bin/"steve").write <<~SH
-      #!/bin/sh
-      exec "#{Formula["python@3.13"].opt_bin}/python3.13" "#{libexec}/ops/steve.py" "$@"
-    SH
-    (bin/"steve").chmod 0755
+    bin.install_symlink libexec/"bin/steve"
   end
 
   def caveats
