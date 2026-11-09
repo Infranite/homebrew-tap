@@ -1,36 +1,36 @@
 {
   "download_urls": {
-    "aarch64-apple-darwin": "https://api.github.com/repos/Infranite/steve/releases/assets/726513238",
-    "x86_64-unknown-linux-gnu": "https://api.github.com/repos/Infranite/steve/releases/assets/726513239"
+    "aarch64-apple-darwin": "https://api.github.com/repos/Infranite/steve/releases/assets/729169823",
+    "x86_64-unknown-linux-gnu": "https://api.github.com/repos/Infranite/steve/releases/assets/729169817"
   },
-  "formula_sha256": "3f0ce7a4cca2f2ec0620908f2a647c376d3021253982936e51abe2a21e8cd565",
+  "formula_sha256": "6e0d30d636a3ae6ddd959c857dfc95923192ab14b5c89b8552145a376e25ce84",
   "manifest": {
     "api_protocol": 1,
     "assets": [
       {
-        "name": "steve-0.2.82-aarch64-apple-darwin-installer.tar.gz",
-        "sha256": "f8df999dd3bd5d555d20e480f979e9ef7e2af1f9a03710a045e4dc8fd65e9906",
-        "size": 49949173,
+        "name": "steve-0.2.92-aarch64-apple-darwin-installer.tar.gz",
+        "sha256": "fdf7a7b74f8939050378c4329ade77a07b232d78ea38a6769ed4dabcfa04d921",
+        "size": 52080179,
         "target": "aarch64-apple-darwin"
       },
       {
-        "name": "steve-0.2.82-x86_64-unknown-linux-gnu-installer.tar.gz",
-        "sha256": "c22feb7c5adb2f5284a77a8881634bcb9688c8c0827f37f9b8c598b102184404",
-        "size": 54791032,
+        "name": "steve-0.2.92-x86_64-unknown-linux-gnu-installer.tar.gz",
+        "sha256": "f1b605b58f2c824c1b494344f5a4b1c7f1a53d9b993c76a42d8d203db7076205",
+        "size": 57046456,
         "target": "x86_64-unknown-linux-gnu"
       }
     ],
     "cli_protocol": 2,
-    "commit": "f700c08c57b398c84463046a6a097444809ee464",
+    "commit": "3956f7701c9cea51068be51b7c17f06b9ae8395d",
     "format_version": 1,
-    "hub_version": "0.2.82",
+    "hub_version": "0.2.92",
     "schema": {
-      "max_read": 54,
-      "min_read": 54,
-      "target": 54
+      "max_read": 61,
+      "min_read": 61,
+      "target": 61
     },
-    "version": "0.2.82",
-    "web_version": "0.2.82"
+    "version": "0.2.92",
+    "web_version": "0.2.92"
   },
   "repository": "Infranite/steve"
 }
