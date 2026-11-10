@@ -1,36 +1,36 @@
 {
   "download_urls": {
-    "aarch64-apple-darwin": "https://api.github.com/repos/Infranite/steve/releases/assets/730209070",
-    "x86_64-unknown-linux-gnu": "https://api.github.com/repos/Infranite/steve/releases/assets/730209072"
+    "aarch64-apple-darwin": "https://api.github.com/repos/Infranite/steve/releases/assets/732087942",
+    "x86_64-unknown-linux-gnu": "https://api.github.com/repos/Infranite/steve/releases/assets/732087940"
   },
-  "formula_sha256": "14626ec611b9d0e52b3741df66373c789d8f258fb51dc31b09f275578bc2f132",
+  "formula_sha256": "10689e1ad0326fe5ec48bb794c8ff7d8433c3d10bb05e4ec64f97d609d9a759b",
   "manifest": {
     "api_protocol": 1,
     "assets": [
       {
-        "name": "steve-0.2.94-aarch64-apple-darwin-installer.tar.gz",
-        "sha256": "9a5cf7b76d9542c6e7ffcc552c19306edc0292dd001046e66f0a8212a087cc97",
-        "size": 52084870,
+        "name": "steve-0.2.97-aarch64-apple-darwin-installer.tar.gz",
+        "sha256": "a88282d2fd12f2a6a824fa9265f1ff5b1af56484f7074b28404759dd3e0bad70",
+        "size": 52011072,
         "target": "aarch64-apple-darwin"
       },
       {
-        "name": "steve-0.2.94-x86_64-unknown-linux-gnu-installer.tar.gz",
-        "sha256": "ec3971e15c3267b6d5d14b6a3b672eaa8450d1f42dcbadac81eef018b8a23a24",
-        "size": 57053758,
+        "name": "steve-0.2.97-x86_64-unknown-linux-gnu-installer.tar.gz",
+        "sha256": "0cce4ed73e25512ecb50c51b2ca6c5e5e9ae7fda331353c1cec1a26630be4b0f",
+        "size": 57112296,
         "target": "x86_64-unknown-linux-gnu"
       }
     ],
     "cli_protocol": 2,
-    "commit": "d361a25cae76580ac7f587bba6da2fc3a7442d7b",
+    "commit": "b0b05227aec9723d4e6755232b38370050a7c91d",
     "format_version": 1,
-    "hub_version": "0.2.94",
+    "hub_version": "0.2.97",
     "schema": {
       "max_read": 61,
       "min_read": 61,
       "target": 61
     },
-    "version": "0.2.94",
-    "web_version": "0.2.94"
+    "version": "0.2.97",
+    "web_version": "0.2.97"
   },
   "repository": "Infranite/steve"
 }
