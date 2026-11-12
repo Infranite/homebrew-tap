@@ -1,24 +1,24 @@
 class Steve < Formula
   desc "Local workspace for autonomous agents"
   homepage "https://github.com/Infranite/steve"
-  version "0.2.101"
+  version "0.2.108"
   license "MIT"
 
   on_macos do
     depends_on arch: :arm64
     depends_on macos: :sonoma
-    url "https://api.github.com/repos/Infranite/steve/releases/assets/738279638",
+    url "https://api.github.com/repos/Infranite/steve/releases/assets/740568440",
         headers: ["Accept: application/octet-stream"]
-    mirror "https://github.com/Infranite/steve/releases/download/v0.2.101/steve-0.2.101-aarch64-apple-darwin-installer.tar.gz"
-    sha256 "b656844aea030f9acea228988d0be708a44163c6e398b55a50d008dfdffb4e7d"
+    mirror "https://github.com/Infranite/steve/releases/download/v0.2.108/steve-0.2.108-aarch64-apple-darwin-installer.tar.gz"
+    sha256 "06e2440b98c16b24d261dfdcc6a6b36352edee6d6c7a4da96ffcba73d090233a"
   end
 
   on_linux do
     depends_on arch: :x86_64
-    url "https://api.github.com/repos/Infranite/steve/releases/assets/738279635",
+    url "https://api.github.com/repos/Infranite/steve/releases/assets/740568442",
         headers: ["Accept: application/octet-stream"]
-    mirror "https://github.com/Infranite/steve/releases/download/v0.2.101/steve-0.2.101-x86_64-unknown-linux-gnu-installer.tar.gz"
-    sha256 "9b1309952a76af0da43fd9e534d917836d1e40855f1bb5694e645fef107a91e1"
+    mirror "https://github.com/Infranite/steve/releases/download/v0.2.108/steve-0.2.108-x86_64-unknown-linux-gnu-installer.tar.gz"
+    sha256 "617d790e8d4741d3ab1d1a7e882b24934e3c761fb30cbf92fafc1a17fbf9f868"
   end
 
   def install
