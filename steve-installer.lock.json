@@ -1,36 +1,36 @@
 {
   "download_urls": {
-    "aarch64-apple-darwin": "https://api.github.com/repos/Infranite/steve/releases/assets/735125977",
-    "x86_64-unknown-linux-gnu": "https://api.github.com/repos/Infranite/steve/releases/assets/735125978"
+    "aarch64-apple-darwin": "https://api.github.com/repos/Infranite/steve/releases/assets/738279638",
+    "x86_64-unknown-linux-gnu": "https://api.github.com/repos/Infranite/steve/releases/assets/738279635"
   },
-  "formula_sha256": "0e930d6df33570894865be595db60897efaf7fb48ad9c8040b7c29b7f08b658d",
+  "formula_sha256": "bcb139a65fa48fa65cd7df0b1a27ce17bf51b249199f556ae4b88022c1da60dd",
   "manifest": {
     "api_protocol": 1,
     "assets": [
       {
-        "name": "steve-0.2.99-aarch64-apple-darwin-installer.tar.gz",
-        "sha256": "69df096ee7a61e611b70574f0397db7df00d8cd992fe3e46e57f8a2c91bad80d",
-        "size": 54028357,
+        "name": "steve-0.2.101-aarch64-apple-darwin-installer.tar.gz",
+        "sha256": "b656844aea030f9acea228988d0be708a44163c6e398b55a50d008dfdffb4e7d",
+        "size": 54133478,
         "target": "aarch64-apple-darwin"
       },
       {
-        "name": "steve-0.2.99-x86_64-unknown-linux-gnu-installer.tar.gz",
-        "sha256": "b0dee1ca5e42e21c055429d2cef64c00db6e10ef6d1ee5962dae1fbc1131ba6a",
-        "size": 59185520,
+        "name": "steve-0.2.101-x86_64-unknown-linux-gnu-installer.tar.gz",
+        "sha256": "9b1309952a76af0da43fd9e534d917836d1e40855f1bb5694e645fef107a91e1",
+        "size": 59285968,
         "target": "x86_64-unknown-linux-gnu"
       }
     ],
     "cli_protocol": 2,
-    "commit": "e88527cb808df76808b4091cdf4bd298c97ee43c",
+    "commit": "948a2d1d3382aa3bb087c48857faee5951a83df3",
     "format_version": 1,
-    "hub_version": "0.2.99",
+    "hub_version": "0.2.101",
     "schema": {
       "max_read": 61,
       "min_read": 61,
       "target": 61
     },
-    "version": "0.2.99",
-    "web_version": "0.2.99"
+    "version": "0.2.101",
+    "web_version": "0.2.101"
   },
   "repository": "Infranite/steve"
 }
